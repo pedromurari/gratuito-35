@@ -121,11 +121,9 @@ const HeroSection = () => {
       params.append('whatsapp', whatsappNumber);
       UTM_KEYS.forEach((key) => params.append(key, utms[key]));
 
-      // We use no-cors because Google Script Web Apps don't return CORS headers for simple POSTs
-      // and keepalive to ensure the request finishes even if the page redirects
-      fetch(SHEETS_URL, {
-        method: 'POST',
-        body: params,
+      // GET with query params survives the GAS 302 redirect (POST body is dropped on redirect)
+      fetch(`${SHEETS_URL}?${params.toString()}`, {
+        method: 'GET',
         mode: 'no-cors',
         keepalive: true,
       });
